@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.restful.laptopsshop.domain.User;
 import com.restful.laptopsshop.repository.UserRepository;
+
 import java.util.List;
 import java.util.Optional;
 

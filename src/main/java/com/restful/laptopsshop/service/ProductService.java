@@ -29,9 +29,9 @@ public class ProductService {
     }
 
     public Product fetchProductById(long id) {
-        Optional<Product> producOptional = this.productRepository.findById(id);
-        if (producOptional.isPresent()) {
-            return producOptional.get();
+        Optional<Product> productOptional = this.productRepository.findById(id);
+        if (productOptional.isPresent()) {
+            return productOptional.get();
         }
         return null;
     }

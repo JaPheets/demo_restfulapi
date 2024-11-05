@@ -1,5 +1,7 @@
 package com.restful.laptopsshop.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,8 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.restful.laptopsshop.domain.User;
 import com.restful.laptopsshop.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 
+@Slf4j
 @RestController
 public class UserController {
     private final UserService userService;
@@ -20,43 +26,39 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String getHelloWorld() {
-        return "Hello";
+    @GetMapping("/home")
+    public String getHome() {
+        log.trace("run Home");
+        return "Home Page";
     }
 
-    @GetMapping("/user/{id}")
-    public User getUserById(@PathVariable("id") long id) {
-
-        return this.userService.handleFetchUserById(id);
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+        User getUserById = this.userService.handleFetchUserById(id);
+        return ResponseEntity.ok(getUserById);
 
     }
 
-    @GetMapping("/user")
-    public List<User> getAllUser() {
-        return this.userService.handleFetchAllUser();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUser() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.handleFetchAllUser());
     }
 
-    @PostMapping("/user")
-    public User createNewUser(@RequestBody User createUser) {
-        // User user = new User();
-        // user.setEmail("admin@gmail.com");
-        // user.setName("admin");
-        // user.setPassword("123456");
-
+    @PostMapping("/users")
+    public ResponseEntity<User> createNewUser(@RequestBody User createUser) {
         User postUser = this.userService.handleCreateUser(createUser);
-        return postUser;
+        return ResponseEntity.status(HttpStatus.CREATED).body(postUser);
     }
 
-    @DeleteMapping("/user/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
         this.userService.handleDeleteUser(id);
-        return "deleteUser";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("deleteUser");
     }
 
-    @PutMapping("/user")
-    public User updateUser(@RequestBody User user) {
+    @PutMapping("/users")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         User putUser = this.userService.handleUpdateUser(user);
-        return putUser;
+        return ResponseEntity.status(HttpStatus.OK).body(putUser);
     }
 }
